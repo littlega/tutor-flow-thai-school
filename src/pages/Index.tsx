@@ -1,12 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import LoginForm from '@/components/Auth/LoginForm';
+import Header from '@/components/Layout/Header';
+import TeacherDashboard from '@/components/Dashboard/TeacherDashboard';
+import StudentDashboard from '@/components/Dashboard/StudentDashboard';
+import ParentDashboard from '@/components/Dashboard/ParentDashboard';
 
 const Index = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <LoginForm />;
+  }
+
+  const renderDashboard = () => {
+    switch (user.role) {
+      case 'teacher':
+        return <TeacherDashboard />;
+      case 'student':
+        return <StudentDashboard />;
+      case 'parent':
+        return <ParentDashboard />;
+      default:
+        return <div>Invalid user role</div>;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {renderDashboard()}
+      </main>
     </div>
   );
 };
